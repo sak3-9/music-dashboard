@@ -1,4 +1,4 @@
-const axios = require('axios');
+const fetch = require('node-fetch');
 const iconv = require('iconv-lite');
 const Parser = require('rss-parser');
 
@@ -10,14 +10,19 @@ exports.handler = async function(event) {
   }
 
   try {
-    const response = await axios.get(rssUrl, {
-      responseType: 'arraybuffer',
-      timeout: 8000,
-    });
+    // タイムアウトを8秒に設定
+    const response = await fetch(rssUrl, { timeout: 8000 });
 
-    const contentType = response.headers['content-type'] || '';
+    if (!response.ok) {
+      throw new Error(`Failed to fetch RSS. Status: ${response.status}`);
+    }
+
+    // レスポンスをBufferとして取得
+    const buffer = await response.buffer();
+
+    const contentType = response.headers.get('content-type') || '';
     const charset = contentType.toLowerCase().includes('shift_jis') ? 'shift_jis' : 'utf-8';
-    const xmlData = iconv.decode(response.data, charset);
+    const xmlData = iconv.decode(buffer, charset);
 
     const parser = new Parser();
     const feed = await parser.parseString(xmlData);
@@ -29,7 +34,7 @@ exports.handler = async function(event) {
     };
 
   } catch (error) {
-    console.error(`RSS取得エラー (${rssUrl}):`, error);
+    console.error(`RSS取得エラー (${rssUrl}):`, error.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: `RSSフィードの取得または解析に失敗しました。` }),
