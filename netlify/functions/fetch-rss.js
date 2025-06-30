@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-const iconv = require('iconv-lite');
 const Parser = require('rss-parser');
 
 exports.handler = async function(event) {
@@ -10,22 +8,9 @@ exports.handler = async function(event) {
   }
 
   try {
-    // タイムアウトを8秒に設定
-    const response = await fetch(rssUrl, { timeout: 8000 });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch RSS. Status: ${response.status}`);
-    }
-
-    // レスポンスをBufferとして取得
-    const buffer = await response.buffer();
-
-    const contentType = response.headers.get('content-type') || '';
-    const charset = contentType.toLowerCase().includes('shift_jis') ? 'shift_jis' : 'utf-8';
-    const xmlData = iconv.decode(buffer, charset);
-
     const parser = new Parser();
-    const feed = await parser.parseString(xmlData);
+    // URLから直接RSSを解析する
+    const feed = await parser.parseURL(rssUrl);
 
     return {
       statusCode: 200,
