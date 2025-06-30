@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音楽ニュースダッシュボード</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>音楽ニュースダッシュボード</h1>
+        <button id="refresh-btn">更新</button>
+    </header>
+
+    <main id="news-container">
+        <!-- 1列目: 音楽ナタリー -->
+        <div class="news-column" id="column-natalie">
+            <h2>音楽ナタリー</h2>
+            <div class="articles"></div>
+            <p class="loading">読み込み中...</p>
+        </div>
+        <!-- 2列目: BARKS -->
+        <div class="news-column" id="column-barks">
+            <h2>BARKS</h2>
+            <div class="articles"></div>
+            <p class="loading">読み込み中...</p>
+        </div>
+        <!-- 3列目: Billboard JAPAN -->
+        <div class="news-column" id="column-billboard">
+            <h2>Billboard JAPAN</h2>
+            <div class="articles"></div>
+            <p class="loading">読み込み中...</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
